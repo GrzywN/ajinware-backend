@@ -1,11 +1,13 @@
-function notFound(req, res, next) {
+import { NextFunction, Request, Response } from 'express';
+
+function notFound(req: Request, res: Response, next: NextFunction): void {
   res.status(404);
   const error = new Error(`🔍 - Not Found - ${req.originalUrl}`);
   next(error);
 }
 
 /* eslint-disable no-unused-vars */
-function errorHandler(err, req, res, next) {
+function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
   /* eslint-enable no-unused-vars */
   const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
   res.status(statusCode);
@@ -15,7 +17,4 @@ function errorHandler(err, req, res, next) {
   });
 }
 
-module.exports = {
-  notFound,
-  errorHandler,
-};
+export { errorHandler, notFound };
