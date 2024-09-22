@@ -1,5 +1,6 @@
 import config from 'config';
 import Redis from 'ioredis';
+import { inject, register } from '../utils/service-locator.ts';
 import logger from './logger.ts';
 
 const redisClient = new Redis({
@@ -16,4 +17,10 @@ redisClient.on('connect', () => {
   logger.info('Successfully connected to Redis');
 });
 
-export default redisClient;
+register(
+  Redis,
+  () => redisClient,
+  (instance) => instance.quit(),
+);
+
+export default () => inject(Redis);

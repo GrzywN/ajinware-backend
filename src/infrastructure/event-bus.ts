@@ -1,17 +1,17 @@
-import { type Redis } from 'ioredis';
+import { Redis } from 'ioredis';
 import logger from '../config/logger.ts';
-import redisClient from '../config/redis.ts';
+import injectRedis from '../config/redis.ts';
+import { inject, register } from '../utils/service-locator.ts';
 
 class EventBus {
-  private publisher: Redis;
-
-  private subscriber: Redis;
-
   private handlers: Map<string, Function[]>;
 
-  constructor() {
-    this.publisher = redisClient;
-    this.subscriber = redisClient;
+  constructor(
+    private publisher: Redis,
+    private subscriber: Redis,
+  ) {
+    this.publisher = publisher;
+    this.subscriber = subscriber;
     this.handlers = new Map();
   }
 
@@ -43,12 +43,20 @@ class EventBus {
     logger.info('EventBus started');
   }
 
-  stop(): void {
-    this.publisher.quit();
-    this.subscriber.quit();
+  async stop(): Promise<void> {
+    await this.publisher.quit();
+    await this.subscriber.quit();
 
     logger.info('EventBus stopped');
   }
 }
 
-export default EventBus;
+register(
+  EventBus,
+  () => new EventBus(injectRedis(), injectRedis()),
+  async (instance) => instance.stop(),
+);
+
+export { EventBus };
+
+export default () => inject(EventBus);
