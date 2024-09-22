@@ -1,28 +1,33 @@
-import request from "supertest";
-import app from "../src/app";
+import request from 'supertest';
+import app from '../src/app';
+import uuidRegExp from './helpers/uuid-regexp.test-helper';
 
-describe("GET /api/v1", () => {
-  it("responds with a json message", (done) => {
+describe('POST /api/coasters', () => {
+  it('responds with a json message', (done) => {
     request(app)
-      .get("/api/v1")
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(
-        200,
-        {
-          message: "API - 👋🌎🌍🌏",
-        },
-        done
-      );
-  });
-});
-
-describe("GET /api/v1/emojis", () => {
-  it("responds with a json message", (done) => {
-    request(app)
-      .get("/api/v1/emojis")
-      .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(200, ["😀", "😳", "🙄"], done);
+      .post('/api/coasters')
+      .send({
+        numberOfStaff: 16,
+        numberOfCustomers: 60000,
+        routeLengthInMeters: 1800,
+        hoursFromInMinutes: 8 * 60,
+        hoursToInMinutes: 16 * 60,
+      })
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body).toEqual(
+          expect.objectContaining({
+            uuid: expect.stringMatching(uuidRegExp),
+            numberOfStaff: 16,
+            numberOfCustomers: 60000,
+            routeLengthInMeters: 1800,
+            hoursFromInMinutes: 8 * 60,
+            hoursToInMinutes: 16 * 60,
+          }),
+        );
+      })
+      .end(done);
   });
 });

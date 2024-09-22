@@ -1,5 +1,5 @@
 import express from 'express';
-import emojis from './emojis.ts';
+import coasters from './coasters.ts';
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/emojis', emojis);
+router.use('/coasters', coasters);
 
 export default router;

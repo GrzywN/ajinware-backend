@@ -19,7 +19,7 @@
     "lint": "eslint --fix src/**/*.ts",
     "code:check": "npm run format:check && npm run lint:check",
     "code:fix": "npm run format && npm run lint",
-    "test": "jest"
+    "test": "jest --forceExit && echo 'FIXME: open handles on ioredis connections'"
   },
   "license": "MIT",
   "dependencies": {
@@ -27,12 +27,16 @@
     "cors": "2.8.5",
     "dotenv": "16.4.5",
     "express": "4.21.0",
+    "express-async-handler": "1.2.0",
     "helmet": "7.1.0",
     "ioredis": "5.4.1",
     "morgan": "1.10.0",
+    "superstruct": "2.0.2",
+    "uuid": "10.0.0",
     "winston": "3.14.2"
   },
   "devDependencies": {
+    "@testcontainers/redis": "10.13.1",
     "@types/config": "3.3.5",
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
@@ -40,6 +44,7 @@
     "@types/morgan": "1.9.9",
     "@types/node": "22.5.5",
     "@types/supertest": "6.0.2",
+    "@types/uuid": "10.0.0",
     "@typescript-eslint/eslint-plugin": "8.6.0",
     "@typescript-eslint/parser": "8.6.0",
     "eslint": "8.57.0",
